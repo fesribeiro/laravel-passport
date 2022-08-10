@@ -26,9 +26,11 @@ Route::middleware('json.response')->group(function () {
             Route::get('/', [AuthController::class, 'index'])->name('auth.index');
             Route::post('/', [AuthController::class, 'store'])->name('auth.store');
 
-            Route::get('/{id}', [AuthController::class, 'show'])->name('auth.show');
-            Route::patch('/{id}', [AuthController::class, 'patch'])->name('auth.patch');
-            Route::delete('/{id}', [AuthController::class, 'destroy'])->name('auth.destroy');
+            Route::middleware('verify.user.exists')->group(function () {
+                Route::get('/{id}', [AuthController::class, 'show'])->name('auth.show');
+                Route::patch('/{id}', [AuthController::class, 'patch'])->name('auth.patch');
+                Route::delete('/{id}', [AuthController::class, 'destroy'])->name('auth.destroy');
+            });
         });
 
     });

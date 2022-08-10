@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
-use App\Services\OAuthService;
 
 class AuthController extends Controller
 {
@@ -42,25 +41,18 @@ class AuthController extends Controller
 
     public function show(Request $request, $id)
     {
-        $request->merge(['id' => $id])->validate(['id' => 'required|int|exists:users,id']);
-
         return User::query()->where('id', $id)->first();
     }
 
     public function destroy(Request $request, $id)
     {
-        $request->merge(['id' => $id])->validate(['id' => 'required|int|exists:users,id']);
-
         User::query()->where('id', $id)->delete();
-
         return response()->noContent();
     }
 
     public function patch(Request $request, $id)
     {
-        $request
-        ->merge(['id' => $id])
-        ->validate([
+        $request->validate([
             'name' => 'nullable|string|min:4',
             'email' => 'nullable|email',
             'password' => 'nullable|min:8',
